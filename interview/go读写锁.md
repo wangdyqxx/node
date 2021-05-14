@@ -100,7 +100,7 @@ func (rw *RWMutex) Lock() {
 ![写锁](../img/20200310183339731.png)
 
 
-```go
+```golang
 func (rw *RWMutex) Unlock() {
     if race.Enabled {
         _ = rw.w.state
@@ -125,3 +125,57 @@ func (rw *RWMutex) Unlock() {
     }
 }
 ```
+
+## 关键核心机制
+
+### 写锁对读锁的抢占
+
+> 加写锁的抢占
+```golang
+// 在加写锁的时候通过将readerCount递减最大允许加读锁的数量，来实现对加读锁的抢占
+r := atomic.AddInt32(&rw.readerCount, -rwmutexMaxReaders) + rwmutexMaxReaders
+```
+
+> 加读锁的抢占检测
+```golang
+// 如果没有写锁的情况下读锁的readerCount进行Add后一定是一个>0的数字，这里通过检测值为负数
+// 就实现了读锁对写锁抢占的检测
+if atomic.AddInt32(&rw.readerCount, 1) < 0 {
+    // A writer is pending, wait for it.
+    runtime_SemacquireMutex(&rw.readerSem, false)
+}
+```
+
+> 写锁抢占读锁后后续的读锁就会加锁失败，但是如果想加写锁成功还要继续对已经加读锁成功的进行等待
+
+```golang
+if r != 0 && atomic.AddInt32(&rw.readerWait, r) != 0 {
+    // 写锁发现需要等待的读锁释放的数量不为0，就自己去休眠了
+    runtime_SemacquireMutex(&rw.writerSem, false)
+}
+```
+
+> 写锁既然休眠了，则必定要有一种唤醒机制其实就是每次释放锁的时候，当检查到有加写锁的情况下，就递减readerWait，并由最后一个释放reader lock的goroutine来实现唤醒写锁
+
+```golang
+if atomic.AddInt32(&rw.readerWait, -1) == 0 {
+    // The last reader unblocks the writer.
+    runtime_Semrelease(&rw.writerSem, false)
+}
+```
+
+### 写锁的公平性
+
+> 在加写锁的时候必须先进行mutex的加锁，而mutex本身在普通模式下是非公平的，只有在饥饿模式下才是公平的
+
+```golang
+rw.w.Lock()
+```
+
+### 写锁与读锁的公平性
+
+在加读锁和写锁的工程中都使用atomic.AddInt32来进行递增，而该指令在底层是会通过LOCK来进行CPU总线加锁的，因此多个CPU同时执行readerCount其实只会有一个成功，从这上面看其实是写锁与读锁之间是相对公平的，谁先达到谁先被CPU调度执行，进行LOCK锁cache line成功，谁就加成功锁
+
+### 可见性与原子性问题
+
+在并发场景中特别是JAVA中通常会提到并发里面的两个问题：可见性与内存屏障、原子性， 其中可见性通常是指在cpu多级缓存下如何保证缓存的一致性，即在一个CPU上修改了了某个数据在其他的CPU上不会继续读取旧的数据。内存屏障通常是为了CPU提高流水线性能，而对指令进行重排序而来，而原子性则是指的执行某个操作的过程的不可分割
