@@ -267,3 +267,10 @@ type sudog struct {
 ```
 
 channel 的主要组成有：一个环形数组实现的队列，用于存储消息元素；两个链表实现的 goroutine 等待队列，用于存储阻塞在 recv 和 send 操作上的 goroutine；一个互斥锁，用于各个属性变动的同步
+
+
+## 为啥channel能做到线程安全
+
+Golang的Channel,发送一个数据到Channel 和 从Channel接收一个数据 都是 原子性的。
+
+不要通过共享内存来通信，而是通过通信来共享内存，前者就是传统的加锁，后者就是Channel。
