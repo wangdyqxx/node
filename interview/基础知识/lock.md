@@ -19,7 +19,7 @@ type RWMutex struct {
 
 ### 读锁加锁过程
 
-![读锁](../img/20200310183100318.png)
+![读锁](../../img/20200310183100318.png)
 
 ```golang
 func (rw *RWMutex) RLock() {
@@ -41,7 +41,7 @@ func (rw *RWMutex) RLock() {
 
 ### 读锁释放逻辑
 
-![读锁](../img/20200310183238131.png)
+![读锁](../../img/20200310183238131.png)
 
 ```golang
 func (rw *RWMutex) RUnlock() {
@@ -70,7 +70,7 @@ func (rw *RWMutex) RUnlock() {
 
 ### 加写锁实现
 
-![写锁](../img/20200310183339731.png)
+![写锁](../../img/20200310183339731.png)
 
 ```golang
 func (rw *RWMutex) Lock() {
@@ -97,7 +97,7 @@ func (rw *RWMutex) Lock() {
 
 ### 释放写锁
 
-![写锁](../img/20200310183339731.png)
+![写锁](../../img/20200310183339731.png)
 
 
 ```golang
