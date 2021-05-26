@@ -73,3 +73,35 @@ type bmap struct {
     overflow uintptr
 }
 ```
+
+## sync.Map 的实现原理
+
+* 通过 read 和 dirty 两个字段将读写分离，读的数据存在只读字段 read 上，将最新写入的数据则存在 dirty 字段上
+* 读取时会先查询 read，不存在再查询 dirty，写入时则只写入 dirty
+* 读取 read 并不需要加锁，而读或写 dirty 都需要加锁
+* 另外有 misses 字段来统计 read 被穿透的次数（被穿透指需要读 dirty 的情况），超过一定次数则将 dirty 数据同步到 read 上
+* 对于删除数据则直接通过标记来延迟删除
+
+```golang
+type Map struct {
+    // 加锁作用，保护 dirty 字段
+    mu Mutex
+    // 只读的数据，实际数据类型为 readOnly
+    read atomic.Value
+    // 最新写入的数据
+    dirty map[interface{}]*entry
+    // 计数器，每次需要读 dirty 则 +1
+    misses int
+}
+```
+
+## readOnly 的数据结构
+
+```golang
+type readOnly struct {
+    // 内建 map
+    m  map[interface{}]*entry
+    // 表示 dirty 里存在 read 里没有的 key，通过该字段决定是否加锁读 dirty
+    amended bool
+}
+```
