@@ -25,6 +25,13 @@ func Duplicate(nums []int) int {
 	return -1
 }
 
+/*
+ * @Author 李大双
+ * @Description: 二维数组中的查找
+ * @param: target
+ * @param: matrix
+ * @return: bool
+ */
 func Find(target int, matrix [][]int) bool {
 	if len(matrix) == 0 || len(matrix[0]) == 0 {
 		return false
