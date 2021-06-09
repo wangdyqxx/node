@@ -92,3 +92,61 @@ func TestReplaceSpace(t *testing.T) {
 		}
 	}
 }
+
+func TestPrintMatrix(t *testing.T) {
+	testCase := []struct {
+		Matrix [][]int
+		Ret    []int
+	}{
+		{
+			Matrix: [][]int{
+				{1, 2},
+				{3, 4},
+			},
+			Ret: []int{1, 2, 4, 3},
+		},
+
+		{
+			Matrix: [][]int{
+				{1, 4, 2, 1},
+				{2, 5, 2, 1},
+			},
+			Ret: []int{1, 4, 2, 1, 1, 2, 5, 2},
+		},
+	}
+
+	var isEqual = func(a, b []int) bool {
+		if len(a) != len(b) {
+			return false
+		}
+		for i, v := range a {
+			if b[i] != v {
+				return false
+			}
+		}
+		return true
+	}
+	for _, v := range testCase {
+		if ret := PrintMatrix(v.Matrix); !isEqual(ret, v.Ret) {
+			t.Errorf("expect %v,but is %v", v.Ret, ret)
+		}
+	}
+}
+
+func TestFirstNotRepeatingChar(t *testing.T) {
+	testCase := []struct {
+		Input  string
+		Output int
+	}{
+		{
+			Input:  "google",
+			Output: 4,
+		},
+	}
+
+	for _, v := range testCase {
+		if output := FirstNotRepeatingChar(v.Input); output != v.Output {
+			t.Errorf("expect %v,but is %v", v.Output, output)
+		}
+	}
+}

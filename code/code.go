@@ -84,3 +84,58 @@ func ReplaceSpace(s string) string {
 	}
 	return string(array)
 }
+
+/*
+ * @Author 李大双
+ * @Description: 顺时针打印矩阵
+ * @param: matrix
+ * @return: []int
+ */
+func PrintMatrix(matrix [][]int) []int {
+	if len(matrix) == 0 || len(matrix[0]) == 0 {
+		return nil
+	}
+	l := len(matrix) * len(matrix[0])
+	ret := make([]int, 0, l)
+	r1, r2, c1, c2 := 0, len(matrix)-1, 0, len(matrix[0])-1
+	for r1 <= r2 && c1 <= c2 {
+		// 上
+		for i := c1; i <= c2; i++ {
+			ret = append(ret, matrix[r1][i])
+		}
+		// 右
+		for i := r1 + 1; i <= r2; i++ {
+			ret = append(ret, matrix[i][c2])
+		}
+		// 下
+		if r1 != r2 {
+			for i := c2 - 1; i >= c1; i-- {
+				ret = append(ret, matrix[r2][i])
+			}
+		}
+		// 左
+		if c1 != c2 {
+			for i := r2 - 1; i > r1; i-- {
+				ret = append(ret, matrix[i][c1])
+			}
+		}
+		r1++
+		r2--
+		c1++
+		c2--
+	}
+	return ret
+}
+
+func FirstNotRepeatingChar(str string) int {
+	array := make([]int, 128)
+	for _, r := range str {
+		array[r]++
+	}
+	for i, r := range str {
+		if array[r] == 1 {
+			return i
+		}
+	}
+	return -1
+}
