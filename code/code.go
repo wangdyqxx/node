@@ -127,6 +127,12 @@ func PrintMatrix(matrix [][]int) []int {
 	return ret
 }
 
+/*
+ * @Author 李大双
+ * @Description: 第一个只出现一次的字符位置
+ * @param: str
+ * @return: int
+ */
 func FirstNotRepeatingChar(str string) int {
 	array := make([]int, 128)
 	for _, r := range str {
