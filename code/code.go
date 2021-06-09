@@ -51,3 +51,36 @@ func Find(target int, matrix [][]int) bool {
 	}
 	return false
 }
+
+/*
+ * @Author 李大双
+ * @Description: 替换空格
+ * @param: s
+ * @return: string
+ */
+func ReplaceSpace(s string) string {
+	array := []byte(s)
+	p1 := len(array) - 1
+	for _, v := range array {
+		if v == ' ' {
+			array = append(array, ' ', ' ')
+		}
+	}
+	p2 := len(array) - 1
+	for p1 >= 0 && p2 > p1 {
+		c := array[p1]
+		p1--
+		if c == ' ' {
+			array[p2] = '0'
+			p2--
+			array[p2] = '2'
+			p2--
+			array[p2] = '%'
+			p2--
+		} else {
+			array[p2] = c
+			p2--
+		}
+	}
+	return string(array)
+}

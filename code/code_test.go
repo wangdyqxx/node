@@ -74,3 +74,21 @@ func TestFind(t *testing.T) {
 		}
 	}
 }
+
+func TestReplaceSpace(t *testing.T) {
+	testCase := []struct {
+		Input  string
+		Output string
+	}{
+		{
+			Input:  "A B",
+			Output: "A%20B",
+		},
+	}
+
+	for _, v := range testCase {
+		if output := ReplaceSpace(v.Input); output != v.Output {
+			t.Errorf("expect %v,but is %v", v.Output, output)
+		}
+	}
+}
