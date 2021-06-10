@@ -1,13 +1,12 @@
 /**
  * @Author: 李大双
  * @Description: 剑指 Offer 题解
- * @File: code_test
+ * @File: array_test
  * @Date: 2021/6/7 上午11:36
  */
-package main
+package code
 
 import (
-	"fmt"
 	"testing"
 )
 
@@ -152,14 +151,4 @@ func TestFirstNotRepeatingChar(t *testing.T) {
 			t.Errorf("expect %v,but is %v", v.Output, output)
 		}
 	}
-}
-
-func TestPop(t *testing.T) {
-	stack1 = []int{}
-	stack2 = []int{}
-	Push(1)
-	Push(2)
-	Push(3)
-	fmt.Println(Pop())
-	fmt.Println(Pop())
 }
