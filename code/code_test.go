@@ -6,7 +6,10 @@
  */
 package main
 
-import "testing"
+import (
+	"fmt"
+	"testing"
+)
 
 func TestDuplicate(t *testing.T) {
 	testCase := []struct {
@@ -149,4 +152,14 @@ func TestFirstNotRepeatingChar(t *testing.T) {
 			t.Errorf("expect %v,but is %v", v.Output, output)
 		}
 	}
+}
+
+func TestPop(t *testing.T) {
+	stack1 = []int{}
+	stack2 = []int{}
+	Push(1)
+	Push(2)
+	Push(3)
+	fmt.Println(Pop())
+	fmt.Println(Pop())
 }
