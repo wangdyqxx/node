@@ -710,10 +710,8 @@ func dpLengthOfLIS(nums []int) int {
 	return ans
 }
 
-func arr1(arr []int) {
-	var tmp []int
+func arr1(arr [5]int) {
 	arr[0] = 2
-	copy(tmp, arr)
 	fmt.Println("a1:", arr)
 	return
 }

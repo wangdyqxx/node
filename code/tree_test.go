@@ -39,7 +39,7 @@ func TestTree_preorderTraversal(t *testing.T) {
 		Right: t7,
 	}
 	t1.Right = t5
-	fmt.Println(preorderTraversal2(t1))
+	//fmt.Println(preorderTraversal2(t1))
 	//fmt.Println(inorderTraversal(t1))
 	//postorderTraversal1(tree)
 	//arr := postorderTraversal2(tree)
@@ -54,4 +54,5 @@ func TestTree_preorderTraversal(t *testing.T) {
 	//t.Log(t1qq)
 	//valqq := codec.serialize(t1qq)
 	//t.Log(valqq)
+	fmt.Println(levelOrder(t1))
 }

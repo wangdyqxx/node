@@ -325,8 +325,8 @@ func levelOrder(root *TreeNode) [][]int {
 		return arrres
 	}
 	ts := []*TreeNode{root}
-	for i := 0; i < len(ts); i++ {
-		var ts1 []*TreeNode
+	for i := 0; 0 < len(ts); i++ {
+		ts1 := []*TreeNode{}
 		arrres = append(arrres, []int{})
 		for j := 0; j < len(ts); j++ {
 			arrres[i] = append(arrres[i], ts[j].Val)
